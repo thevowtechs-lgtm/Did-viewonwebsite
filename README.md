@@ -27,34 +27,8 @@ did-viewonwebsite/
 
 ---
 
-## Deployment Steps (Linode VPS)
 
-### 1. Upload Files
-```bash
-scp -r did-viewonwebsite/* root@YOUR_LINODE_IP:/var/www/viewonwebsite.com/
-```
-
-### 2. Set Permissions
-```bash
-chmod -R 755 /var/www/viewonwebsite.com/
-chown -R www-data:www-data /var/www/viewonwebsite.com/
-```
-
-### 3. Nginx Setup
-```bash
-cp nginx.conf /etc/nginx/sites-available/viewonwebsite.com
-ln -s /etc/nginx/sites-available/viewonwebsite.com /etc/nginx/sites-enabled/
-nginx -t
-systemctl reload nginx
-```
-
-### 4. SSL Certificate (Let's Encrypt)
-```bash
-apt install certbot python3-certbot-nginx -y
-certbot --nginx -d viewonwebsite.com -d www.viewonwebsite.com
-```
-
-### 5. Verify Live Endpoints
+### Live Endpoints
 ```
 https://viewonwebsite.com/                              → Landing page
 https://viewonwebsite.com/.well-known/did.json          → Root DID document
@@ -65,15 +39,6 @@ https://viewonwebsite.com/spec/                         → DID specification
 
 ---
 
-## W3C DID Registration
-
-After deployment, submit the live resolver URL to Otto Mora (W3C DID Working Group):
-
-1. Fork: https://github.com/w3c/did-extensions
-2. Add `viewonwebsite` entry to `methods.json`
-3. Submit pull request with live resolver URL
-
----
 
 ## The Physics Proof
 
