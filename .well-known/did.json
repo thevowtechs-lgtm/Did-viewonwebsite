@@ -1,0 +1,52 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:viewonwebsite:viewonwebsite.com",
+  "controller": "did:viewonwebsite:viewonwebsite.com",
+  "created": "2026-02-28T00:00:00Z",
+  "updated": "2026-02-28T00:00:00Z",
+  "verificationMethod": [
+    {
+      "id": "did:viewonwebsite:viewonwebsite.com#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:viewonwebsite:viewonwebsite.com",
+      "publicKeyMultibase": "z6MkrHKzgsahxBLyNAbLasi9dDs4hBuHvXMEfhLFcSEBJ6Lc"
+    }
+  ],
+  "authentication": ["did:viewonwebsite:viewonwebsite.com#key-1"],
+  "assertionMethod": ["did:viewonwebsite:viewonwebsite.com#key-1"],
+  "service": [
+    {
+      "id": "did:viewonwebsite:viewonwebsite.com#visual-resolver",
+      "type": "VisualIntegrityResolver",
+      "serviceEndpoint": "https://viewonwebsite.com/resolve"
+    },
+    {
+      "id": "did:viewonwebsite:viewonwebsite.com#specification",
+      "type": "DIDMethodSpecification",
+      "serviceEndpoint": "https://viewonwebsite.com/spec/"
+    },
+    {
+      "id": "did:viewonwebsite:viewonwebsite.com#authority",
+      "type": "SovereignAuthority",
+      "serviceEndpoint": "mailto:authority@hardcodedlogic.com"
+    }
+  ],
+  "metadata": {
+    "method": "did:viewonwebsite",
+    "version": "1.0.0",
+    "sovereign_root": "viewonwebsite.com",
+    "icann_lock": "10-year",
+    "registered_jurisdiction": "Dubai, UAE",
+    "architect": "Tamer Maher Eldebes",
+    "authority": "Hardcoded Logic",
+    "w3c_submission": "pending",
+    "latency_of_trust": "sub-1ms",
+    "visual_gap_eliminated": "6.67m at 120km/h",
+    "injection_window_closed": "200ms to 0ms",
+    "did_level5_ready": true,
+    "companion_root": "did:verifiedcar:verifiedcar.com"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "@context": "https://identity.foundation/.well-known/did-configuration/v1",
+  "linked_dids": [
+    {
+      "@context": [
+        "https://www.w3.org/ns/did/v1",
+        "https://w3id.org/security/suites/ed25519-2020/v1"
+      ],
+      "id": "did:viewonwebsite:viewonwebsite.com",
+      "verificationMethod": [
+        {
+          "id": "did:viewonwebsite:viewonwebsite.com#key-1",
+          "type": "Ed25519VerificationKey2020",
+          "controller": "did:viewonwebsite:viewonwebsite.com",
+          "publicKeyMultibase": "z6MkrHKzgsahxBLyNAbLasi9dDs4hBuHvXMEfhLFcSEBJ6Lc"
+        }
+      ],
+      "authentication": ["did:viewonwebsite:viewonwebsite.com#key-1"],
+      "assertionMethod": ["did:viewonwebsite:viewonwebsite.com#key-1"],
+      "service": [
+        {
+          "id": "did:viewonwebsite:viewonwebsite.com#visual-resolver",
+          "type": "VisualIntegrityResolver",
+          "serviceEndpoint": "https://viewonwebsite.com/resolve"
+        },
+        {
+          "id": "did:viewonwebsite:viewonwebsite.com#spec",
+          "type": "DIDMethodSpecification",
+          "serviceEndpoint": "https://viewonwebsite.com/spec/"
+        }
+      ]
+    }
+  ]
+}

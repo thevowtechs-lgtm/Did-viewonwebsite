@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>did:viewonwebsite Resolver</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#020810;color:#e8f4f8;font-family:'Courier New',monospace;padding:40px}
+h1{color:#00e5ff;font-size:18px;margin-bottom:8px;letter-spacing:.1em}
+p{color:#3d5a6e;font-size:12px;margin-bottom:32px;letter-spacing:.08em}
+.box{border:1px solid rgba(0,229,255,.2);padding:28px;max-width:760px;margin-bottom:20px;background:rgba(0,20,50,.4)}
+.label{font-size:10px;letter-spacing:.2em;color:#00e5ff;text-transform:uppercase;margin-bottom:8px}
+pre{font-size:12px;color:#8fb0c0;line-height:1.7;white-space:pre-wrap;word-break:break-all}
+.note{font-size:10px;color:#3d5a6e;letter-spacing:.08em;text-transform:uppercase;margin-top:20px}
+a{color:#00e5ff;text-decoration:none}
+</style>
+</head>
+<body>
+<h1>did:viewonwebsite Resolver</h1>
+<p>SOVEREIGN VISUAL INTEGRITY ROOT &mdash; VIEWONWEBSITE.COM &mdash; DUBAI, UAE</p>
+
+<div class="box">
+  <div class="label">Resolver Endpoint</div>
+  <pre>GET /resolve?did=did:viewonwebsite:{identifier}
+
+Response: application/did+json
+Status: 200 OK (resolved) | 404 Not Found | 400 Bad Request</pre>
+</div>
+
+<div class="box">
+  <div class="label">Example Resolution</div>
+  <pre>GET /resolve?did=did:viewonwebsite:viewonwebsite.com
+
+{
+  "id": "did:viewonwebsite:viewonwebsite.com",
+  "method": "viewonwebsite",
+  "sovereign_root": "viewonwebsite.com",
+  "visual_integrity": true,
+  "latency_of_trust": "&lt;1ms",
+  "enclave_verified": true,
+  "injection_window": "0ms",
+  "status": "SOVEREIGN"
+}</pre>
+</div>
+
+<div class="box">
+  <div class="label">Root DID Document</div>
+  <pre>did:viewonwebsite:viewonwebsite.com
+
+Resolution: <a href="/.well-known/did.json">/.well-known/did.json</a>
+Configuration: <a href="/.well-known/did-configuration.json">/.well-known/did-configuration.json</a>
+Specification: <a href="/spec/">viewonwebsite.com/spec/</a>
+Authority: <a href="mailto:authority@hardcodedlogic.com">authority@hardcodedlogic.com</a></pre>
+</div>
+
+<div class="note">
+  Resolver implementation requires deployment. Contact authority@hardcodedlogic.com for integration.
+</div>
+</body>
+</html>

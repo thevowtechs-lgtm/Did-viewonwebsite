@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="did:viewonwebsite — The sovereign W3C DID method for visual data integrity. Closes the 200ms visual injection window. 6.67m visual gap eliminated. Latency of Trust under 1ms.">
+<meta property="og:title" content="did:viewonwebsite — Visual Integrity Root">
+<meta property="og:description" content="Is what you see real? Sovereign visual data verification. Sub-1ms Latency of Trust. Dubai, UAE.">
+<title>did:viewonwebsite — Visual Integrity Root</title>
+<link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&family=Syne:wght@400;700;800&family=Syne+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --void:#020810;
+  --cyan:#00e5ff;
+  --cglow:rgba(0,229,255,.45);
+  --threat:#ff3d00;
+  --green:#00ff88;
+  --white:#e8f4f8;
+  --gray:#3d5a6e;
+  --silver:#8fb0c0;
+}
+html{scroll-behavior:smooth}
+body{background:var(--void);color:var(--white);font-family:'Syne',sans-serif;overflow-x:hidden}
+canvas#bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
+.scanlines{position:fixed;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,229,255,.012) 3px,rgba(0,229,255,.012) 4px)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;justify-content:space-between;align-items:center;
+  padding:14px 60px;border-bottom:1px solid rgba(0,229,255,.1);
+  background:rgba(2,8,16,.97);backdrop-filter:blur(20px)}
+.nlog{font-family:'Major Mono Display',monospace;font-size:13px;color:var(--cyan);letter-spacing:.05em}
+.nlog span{color:var(--white)}
+.nlinks{display:flex;gap:28px;list-style:none}
+.nlinks a{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--gray);text-decoration:none;transition:color .2s}
+.nlinks a:hover{color:var(--cyan)}
+.nstat{display:flex;align-items:center;gap:8px}
+.ndot{width:6px;height:6px;background:var(--cyan);border-radius:50%;animation:cdot 2s infinite}
+@keyframes cdot{0%,100%{box-shadow:0 0 0 0 rgba(0,229,255,.5)}50%{box-shadow:0 0 0 8px rgba(0,229,255,0)}}
+.ntxt{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase}
+
+/* HERO */
+.hero{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;
+  justify-content:center;padding:120px 60px 80px;overflow:hidden}
+.sweep{position:absolute;left:0;right:0;height:1px;
+  background:linear-gradient(to right,transparent,var(--cyan),transparent);
+  opacity:.25;animation:swp 5s ease-in-out infinite}
+@keyframes swp{0%{top:0;opacity:0}10%{opacity:.25}90%{opacity:.25}100%{top:100%;opacity:0}}
+.eye-bg{position:absolute;right:60px;top:50%;transform:translateY(-50%);
+  font-size:min(52vw,620px);opacity:.04;line-height:1;pointer-events:none;user-select:none}
+
+.hpre{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.28em;text-transform:uppercase;
+  color:var(--cyan);display:flex;align-items:center;gap:12px;margin-bottom:28px;animation:fu .8s ease both}
+.hpre::before{content:'';display:block;width:40px;height:1px;background:var(--cyan)}
+.htitle{font-family:'Major Mono Display',monospace;font-size:clamp(34px,7vw,96px);
+  line-height:.88;margin-bottom:18px;animation:fu .8s .1s ease both;opacity:0}
+.htitle .tw{display:block;color:var(--white)}
+.htitle .tc{display:block;color:transparent;-webkit-text-stroke:1px var(--cyan);
+  text-shadow:0 0 60px var(--cglow);animation:tcg 3s ease-in-out infinite}
+@keyframes tcg{0%,100%{text-shadow:0 0 60px var(--cglow)}50%{text-shadow:0 0 110px rgba(0,229,255,.8),0 0 200px rgba(0,229,255,.3)}}
+.heq{font-family:'Syne Mono',monospace;font-size:clamp(11px,1.6vw,17px);letter-spacing:.14em;
+  color:var(--silver);margin-bottom:28px;animation:fu .8s .2s ease both;opacity:0}
+.heq b{color:var(--cyan)}
+.hsub{font-size:clamp(13px,1.5vw,17px);color:var(--silver);line-height:1.7;
+  max-width:540px;margin-bottom:44px;animation:fu .8s .3s ease both;opacity:0}
+.hsub b{color:var(--cyan)}
+.hstats{display:flex;gap:2px;flex-wrap:wrap;margin-bottom:40px;animation:fu .8s .4s ease both;opacity:0}
+.hst{padding:15px 22px;border:1px solid rgba(0,229,255,.12);background:rgba(0,229,255,.04);position:relative}
+.hst::before{content:'';position:absolute;top:0;left:0;right:0;height:1px}
+.hst.th::before{background:var(--threat)}
+.hst.vf::before{background:var(--green)}
+.hst:not(.th):not(.vf)::before{background:var(--cyan);opacity:.5}
+.hstn{font-family:'Major Mono Display',monospace;font-size:clamp(15px,2.2vw,24px);line-height:1;margin-bottom:4px}
+.hst.th .hstn{color:var(--threat)}.hst.vf .hstn{color:var(--green)}.hst:not(.th):not(.vf) .hstn{color:var(--cyan)}
+.hstl{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:.12em;color:var(--gray);text-transform:uppercase}
+.hctas{display:flex;gap:12px;flex-wrap:wrap;animation:fu .8s .5s ease both;opacity:0}
+@keyframes fu{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* BUTTONS */
+.btn{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+  padding:13px 30px;text-decoration:none;display:inline-block;cursor:pointer;
+  clip-path:polygon(0 0,calc(100% - 8px) 0,100% 8px,100% 100%,8px 100%,0 calc(100% - 8px));
+  transition:all .2s;border:none}
+.btn.cy{background:var(--cyan);color:var(--void)}.btn.cy:hover{background:#33eeff;box-shadow:0 0 28px var(--cglow)}
+.btn.gh{border:1px solid rgba(0,229,255,.3);color:var(--cyan);background:transparent}.btn.gh:hover{border-color:var(--cyan);background:rgba(0,229,255,.06)}
+.btn.tr{border:1px solid rgba(255,61,0,.4);color:var(--threat);background:rgba(255,61,0,.08)}.btn.tr:hover{background:rgba(255,61,0,.18)}
+.btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+
+.divl{position:relative;z-index:10;height:1px;background:linear-gradient(to right,transparent,rgba(0,229,255,.2),transparent)}
+
+/* SECTIONS */
+.sec{position:relative;z-index:10;padding:90px 60px}
+.sec.alt{background:rgba(0,8,20,.7);border-top:1px solid rgba(0,229,255,.07);border-bottom:1px solid rgba(0,229,255,.07)}
+.stag{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;
+  color:var(--cyan);display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.stag::before{content:'';display:block;width:18px;height:1px;background:var(--cyan)}
+.sh{font-family:'Major Mono Display',monospace;font-size:clamp(22px,3.8vw,50px);
+  color:var(--white);line-height:1.05;margin-bottom:48px}
+.sh span{color:var(--cyan)}.sh.c{text-align:center}
+
+/* ══ DRAG-SLIDER COMPARE DEMO ══ */
+.demo-wrap{max-width:1040px;margin:0 auto;border:1px solid rgba(0,229,255,.15);background:rgba(2,8,16,.98)}
+
+.slider-stage{position:relative;overflow:hidden;background:#000;cursor:ew-resize;user-select:none;-webkit-user-select:none}
+canvas#cmerge{display:block;width:100%;height:280px}
+
+.slider-bar{position:absolute;top:0;bottom:0;width:2px;background:var(--cyan);
+  box-shadow:0 0 14px var(--cglow),0 0 28px rgba(0,229,255,.2);pointer-events:none;transform:translateX(-50%);will-change:left}
+.slider-knob{position:absolute;top:50%;width:40px;height:40px;border-radius:50%;
+  background:var(--void);border:2px solid var(--cyan);box-shadow:0 0 20px var(--cglow);
+  display:flex;align-items:center;justify-content:center;
+  transform:translate(-50%,-50%);pointer-events:none;will-change:left}
+.slider-knob svg{width:16px;height:16px;fill:none;stroke:var(--cyan);stroke-width:2;stroke-linecap:round}
+.slider-labels{position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between;pointer-events:none}
+.slbl{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px}
+.slbl.L{color:rgba(255,61,0,.8);background:rgba(255,61,0,.1)}
+.slbl.R{color:rgba(0,229,255,.8);background:rgba(0,229,255,.07)}
+
+/* Dual telemetry */
+.dual-tel{display:grid;grid-template-columns:1fr 1px 1fr;border-top:1px solid rgba(0,229,255,.07)}
+.dt-div{background:rgba(0,229,255,.1)}
+.dt-side{}
+.dt-hd{display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid rgba(0,229,255,.06)}
+.dt-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.dt-lb{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.12em;text-transform:uppercase}
+.tel-row{display:grid;grid-template-columns:repeat(3,1fr)}
+.tc{padding:12px 16px;border-right:1px solid rgba(0,229,255,.06);position:relative;overflow:hidden}
+.tc:last-child{border-right:none}
+.tlb{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--gray);margin-bottom:4px}
+.tv{font-family:'Major Mono Display',monospace;font-size:14px;line-height:1}
+.tbar{position:absolute;bottom:0;left:0;height:2px;transition:width .08s linear}
+
+/* Event log */
+.elog{border-top:1px solid rgba(0,229,255,.07);height:82px;overflow:hidden;background:rgba(0,6,14,.9)}
+.elog-hd{display:flex;align-items:center;gap:8px;padding:7px 18px;border-bottom:1px solid rgba(0,229,255,.06)}
+.elog-t{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);flex:1}
+#ell{padding:3px 0}
+.el{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.05em;padding:2px 18px;
+  display:flex;gap:10px;animation:lin .3s ease forwards}
+@keyframes lin{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+.el-t{color:rgba(0,229,255,.4);flex-shrink:0}.el-e{flex:1}.el-r{font-weight:700;flex-shrink:0}
+
+/* Controls */
+.dctrl{display:flex;gap:10px;justify-content:center;align-items:center;
+  padding:18px;border-top:1px solid rgba(0,229,255,.07);background:rgba(0,10,24,.4);flex-wrap:wrap}
+.ssel{display:flex;gap:2px;flex-wrap:wrap}
+.sbtn{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  padding:8px 14px;cursor:pointer;border:1px solid rgba(0,229,255,.2);background:transparent;color:var(--gray);transition:all .2s}
+.sbtn.on{background:var(--cyan);color:var(--void);border-color:var(--cyan)}
+.sbtn:hover:not(.on){border-color:rgba(0,229,255,.5);color:var(--cyan)}
+
+/* PROOF CARDS */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:2px;max-width:880px;margin:0 auto}
+.pc{padding:44px 36px;border:1px solid rgba(0,229,255,.1);background:rgba(0,10,24,.8);position:relative}
+.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.pc.th{border-color:rgba(255,61,0,.2);background:rgba(255,61,0,.02)}.pc.th::before{background:var(--threat)}
+.pc.sf{border-color:rgba(0,255,136,.2);background:rgba(0,255,136,.02)}.pc.sf::before{background:var(--green)}
+.pclb{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px}
+.pc.th .pclb{color:var(--threat)}.pc.sf .pclb{color:var(--green)}
+.pcn{font-family:'Major Mono Display',monospace;font-size:clamp(38px,5.5vw,76px);line-height:.85;margin-bottom:10px}
+.pc.th .pcn{color:var(--threat)}.pc.sf .pcn{color:var(--green)}
+.pcu{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);margin-bottom:18px}
+.pcd{font-size:13px;color:var(--silver);line-height:1.8}.pcd b{color:var(--white)}
+
+/* LOT bars */
+.lotd{max-width:880px;margin:44px auto 0}
+.lotr{display:flex;align-items:center;margin-bottom:2px;height:48px}
+.lotl{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--gray);width:160px;flex-shrink:0;text-align:right;padding-right:14px}
+.lotbw{flex:1;height:100%;display:flex;align-items:center}
+.lotb{height:34px;display:flex;align-items:center;padding:0 10px}
+.lotb.th{background:rgba(255,61,0,.15);border:1px solid rgba(255,61,0,.35)}
+.lotb.sf{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.3)}
+.lotbi{font-family:'Major Mono Display',monospace;font-size:12px;white-space:nowrap}
+.lotb.th .lotbi{color:var(--threat)}.lotb.sf .lotbi{color:var(--green)}
+.lott{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:.1em;color:var(--gray);margin-left:10px;white-space:nowrap}
+
+/* TIMELINE */
+.tl{position:relative;max-width:960px;margin:0 auto}
+.tl::before{content:'';position:absolute;left:50%;top:0;bottom:0;width:1px;
+  background:linear-gradient(to bottom,transparent,var(--cyan) 15%,var(--cyan) 85%,transparent);transform:translateX(-50%)}
+.tr{display:grid;grid-template-columns:1fr 58px 1fr;margin-bottom:3px;align-items:stretch}
+.tll{padding:24px 30px 24px 0;text-align:right}.tlr{padding:24px 0 24px 30px}
+.tlm{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+.tdot{width:13px;height:13px;border-radius:50%;border:2px solid var(--cyan);background:var(--void);position:relative;z-index:2;flex-shrink:0}
+.tdot.lit{background:var(--cyan);box-shadow:0 0 16px var(--cglow)}
+.tdot.rd{border-color:var(--threat)}
+.tdot.eg{background:var(--green);border-color:var(--green);box-shadow:0 0 18px rgba(0,255,136,.5)}
+.tms{font-family:'Major Mono Display',monospace;font-size:8px;color:var(--cyan)}
+.ttg{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:4px}
+.tll .ttg{color:var(--threat)}.tlr .ttg{color:var(--green)}
+.tnm{font-family:'Major Mono Display',monospace;font-size:clamp(14px,2vw,24px);line-height:1;margin-bottom:4px}
+.tll .tnm{color:var(--threat)}.tlr .tnm{color:var(--green)}
+.tdc{font-size:12px;color:var(--silver);line-height:1.7}
+
+/* MATRIX */
+.mtbl{width:100%;border-collapse:collapse;max-width:1040px;margin:0 auto}
+.mtbl th,.mtbl td{padding:14px 18px;text-align:center;border:1px solid rgba(0,229,255,.07)}
+.mtbl th{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--cyan);background:rgba(0,18,46,.9)}
+.mtbl td{font-family:'Syne Mono',monospace;font-size:11px;transition:background .2s}
+.mtbl td:first-child{text-align:left;color:var(--white);font-family:'Major Mono Display',monospace;font-size:10px}
+.mtbl tbody tr:hover td{background:rgba(0,28,58,.5)}
+.rv{color:var(--threat);font-weight:700}.gv{color:var(--green);font-weight:700}.cv{color:var(--cyan)}
+
+/* STACK */
+.lyrs{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:2px}
+.lyr{display:grid;grid-template-columns:68px 1fr 180px;border:1px solid rgba(0,229,255,.1);
+  background:rgba(2,8,16,.88);transition:all .3s;overflow:hidden}
+.lyr:hover{border-color:rgba(0,229,255,.35);background:rgba(0,20,40,.82);transform:translateX(4px)}
+.lyr.mst{border-color:var(--cyan);background:rgba(0,18,48,.75)}
+.lnr{font-family:'Major Mono Display',monospace;font-size:20px;display:flex;align-items:center;
+  justify-content:center;border-right:1px solid rgba(0,229,255,.1);padding:24px 0}
+.lyr.mst .lnr{color:var(--cyan)}.lyr:not(.mst) .lnr{color:rgba(0,229,255,.14)}
+.li{padding:24px}
+.lnm{font-family:'Major Mono Display',monospace;font-size:12px;color:var(--white);margin-bottom:4px}
+.lyr.mst .lnm{color:var(--cyan)}
+.lsb{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.09em;color:var(--gray);text-transform:uppercase;line-height:1.8}
+.lpf{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;padding:20px;border-left:1px solid rgba(0,229,255,.1)}
+.lmt{font-family:'Major Mono Display',monospace;font-size:18px;color:var(--cyan);line-height:1;margin-bottom:3px}
+.lun{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:.1em;color:var(--gray);text-transform:uppercase}
+
+/* INDUSTRIES */
+.igr{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:44px}
+.icd{padding:32px 26px;border:1px solid rgba(0,229,255,.07);background:rgba(2,8,16,.92);
+  position:relative;overflow:hidden;transition:all .3s}
+.icd:hover{border-color:rgba(0,229,255,.2);background:rgba(0,18,40,.7)}
+.iico{font-size:28px;margin-bottom:10px;display:block}
+.inm{font-family:'Major Mono Display',monospace;font-size:11px;color:var(--cyan);margin-bottom:12px}
+.irw{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(0,229,255,.06)}
+.ilb{font-family:'Syne Mono',monospace;font-size:8px;letter-spacing:.1em;color:var(--gray);text-transform:uppercase}
+.ivl{font-family:'Major Mono Display',monospace;font-size:11px}
+.ivl.r{color:var(--threat)}.ivl.g{color:var(--green)}
+.idc{font-size:12px;color:var(--silver);line-height:1.7;margin-top:10px}
+
+/* VALUATION */
+.vsec{position:relative;z-index:10;padding:110px 60px;text-align:center;overflow:hidden}
+.vgb{position:absolute;inset:0;pointer-events:none;
+  background-image:linear-gradient(rgba(0,229,255,.025) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(0,229,255,.025) 1px,transparent 1px);background-size:55px 55px}
+.vlb{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.26em;color:var(--cyan);
+  text-transform:uppercase;margin-bottom:22px;position:relative;z-index:1}
+.vbig{font-family:'Major Mono Display',monospace;font-size:clamp(52px,12vw,155px);line-height:.8;
+  color:transparent;-webkit-text-stroke:1px var(--cyan);text-shadow:0 0 80px var(--cglow);
+  margin-bottom:12px;position:relative;z-index:1;animation:vcg 3.5s ease-in-out infinite}
+@keyframes vcg{0%,100%{text-shadow:0 0 80px var(--cglow)}50%{text-shadow:0 0 130px rgba(0,229,255,.8),0 0 260px rgba(0,229,255,.3)}}
+.vden{font-family:'Major Mono Display',monospace;font-size:clamp(16px,3.5vw,44px);color:var(--cyan);margin-bottom:32px;position:relative;z-index:1}
+.veq{font-family:'Syne Mono',monospace;font-size:11px;color:var(--gray);letter-spacing:.09em;
+  max-width:660px;margin:0 auto 24px;line-height:2.3;position:relative;z-index:1}
+.veq b{color:var(--cyan)}
+.vliv{font-family:'Major Mono Display',monospace;font-size:12px;color:var(--cyan);letter-spacing:.05em;
+  margin-bottom:44px;position:relative;z-index:1;display:flex;align-items:center;justify-content:center;gap:10px}
+
+/* LIVE FEED */
+.feedw{position:fixed;bottom:20px;right:20px;z-index:500;width:310px;
+  background:rgba(2,8,16,.97);border:1px solid rgba(0,229,255,.14);backdrop-filter:blur(16px);overflow:hidden}
+.fhd{display:flex;align-items:center;gap:8px;padding:10px 13px;border-bottom:1px solid rgba(0,229,255,.1);background:rgba(0,18,48,.5)}
+.fht{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--cyan);text-transform:uppercase;flex:1}
+.fhx{font-family:'Syne Mono',monospace;font-size:10px;color:var(--gray);cursor:pointer;transition:color .2s}
+.fhx:hover{color:var(--threat)}
+#fb{height:106px;overflow:hidden;padding:4px 0}
+.fl{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.05em;color:var(--gray);padding:2px 13px;display:flex;gap:8px;align-items:center}
+.flt{color:rgba(0,229,255,.4);flex-shrink:0}.fli{color:var(--cyan);flex-shrink:0}.fle{color:var(--green)}.flm{color:var(--cyan);margin-left:auto;flex-shrink:0}
+
+/* FOOTER */
+footer{position:relative;z-index:10;border-top:1px solid rgba(0,229,255,.1);
+  padding:52px 60px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:36px;align-items:end}
+.ftbr{font-family:'Major Mono Display',monospace;font-size:17px;color:var(--cyan);margin-bottom:6px}
+.ftsu{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.14em;color:var(--gray);text-transform:uppercase}
+.ftr{display:flex;flex-direction:column;gap:7px}
+.froot{font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.09em;color:var(--gray);display:flex;align-items:center;gap:8px}
+.froot::before{content:'';display:block;width:4px;height:4px;background:var(--cyan);border-radius:50%;flex-shrink:0}
+.fau{text-align:right}
+.faul{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.18em;color:var(--gray);text-transform:uppercase;margin-bottom:4px}
+.faue{font-family:'Syne Mono',monospace;font-size:12px;color:var(--cyan)}
+.fbt{position:relative;z-index:10;border-top:1px solid rgba(0,229,255,.05);padding:16px 60px;display:flex;justify-content:space-between;align-items:center}
+.fbc{font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.09em;color:var(--gray);text-transform:uppercase}
+.fbs{font-family:'Major Mono Display',monospace;font-size:10px;color:var(--cyan)}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+.reveal.vis{opacity:1;transform:translateY(0)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:13px 18px}.nlinks{display:none}
+  .hero,.sec,.vsec{padding:100px 18px 54px}
+  .hstats{justify-content:flex-start}
+  .hctas{flex-direction:column;align-items:flex-start}
+  canvas#cmerge{height:200px}
+  .dual-tel{grid-template-columns:1fr}.dt-div{display:none}
+  .tel-row{grid-template-columns:1fr 1fr}
+  .pgrid,.igr{grid-template-columns:1fr}
+  .tr{grid-template-columns:1fr}.tlm{display:none}.tl::before{display:none}
+  .lyr{grid-template-columns:54px 1fr}.lpf{display:none}
+  footer{grid-template-columns:1fr;padding:36px 18px}
+  .fau{text-align:left}
+  .fbt{flex-direction:column;gap:8px;padding:16px 18px;text-align:center}
+  .feedw{width:250px;right:8px;bottom:8px}
+  .lotl{width:110px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgc"></canvas>
+<div class="scanlines"></div>
+
+<!-- LIVE FEED -->
+<div class="feedw" id="feedw">
+  <div class="fhd">
+    <div class="ndot"></div>
+    <div class="fht">Live Verification Feed</div>
+    <div class="fhx" onclick="document.getElementById('feedw').style.display='none'">&#x2715;</div>
+  </div>
+  <div id="fb"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nlog">did:<span>viewonwebsite</span></div>
+  <ul class="nlinks">
+    <li><a href="#demo">Demo</a></li>
+    <li><a href="#proof">Physics</a></li>
+    <li><a href="#scenario">Scenario</a></li>
+    <li><a href="#stack">Stack</a></li>
+    <li><a href="#val">Valuation</a></li>
+  </ul>
+  <div class="nstat"><div class="ndot"></div><div class="ntxt">Visual Integrity Root Active</div></div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="sweep"></div>
+  <div class="eye-bg">&#x1F441;</div>
+  <div class="hpre">W3C DID Method &mdash; Sovereign Visual Integrity Root &mdash; Dubai, UAE 2026</div>
+  <h1 class="htitle">
+    <span class="tw">view</span>
+    <span class="tw">on</span>
+    <span class="tc">website</span>
+  </h1>
+  <div class="heq">&nbsp;<b>&ldquo;Is what I see real?&rdquo;</b>&nbsp; &rarr; &lt;1ms &rarr; <b>&#x2713; verified</b></div>
+  <p class="hsub">The sovereign root that confirms visual data integrity before any autonomous machine acts on what it sees. <b>50&ndash;200ms visual injection window. Closed.</b> 6.67 meters of fatal visual gap. Eliminated.</p>
+  <div class="hstats">
+    <div class="hst th"><div class="hstn">200ms</div><div class="hstl">Injection Window</div></div>
+    <div class="hst th"><div class="hstn">6.67m</div><div class="hstl">Visual Gap @ 120km/h</div></div>
+    <div class="hst"><div class="hstn">&lt;1ms</div><div class="hstl">Latency of Trust</div></div>
+    <div class="hst vf"><div class="hstn">ZERO</div><div class="hstl">Injection Risk</div></div>
+  </div>
+  <div class="hctas">
+    <a href="#demo" class="btn cy">&#x26A1; See The Injection Attack</a>
+    <a href="#proof" class="btn gh">Physics Proof</a>
+  </div>
+</section>
+
+<div class="divl"></div>
+
+<!-- DEMO -->
+<section class="sec" id="demo">
+  <div class="stag">Live Interactive Demo</div>
+  <div class="sh">The <span>Visual Injection</span> Attack</div>
+  <p style="font-family:'Syne Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gray);margin-bottom:32px">
+    &#x2190; Drag the slider &mdash; Left: injected threat view &nbsp;&#x2502;&nbsp; Right: verified cryptographic reality &#x2192;
+  </p>
+
+  <div class="demo-wrap">
+
+    <!-- DRAG SLIDER STAGE -->
+    <div class="slider-stage" id="sstage">
+      <canvas id="cmerge" height="280"></canvas>
+      <div class="slider-bar" id="sbar" style="left:50%"></div>
+      <div class="slider-knob" id="sknob" style="left:50%">
+        <svg viewBox="0 0 16 16"><path d="M5 3l-4 5 4 5M11 3l4 5-4 5"/></svg>
+      </div>
+      <div class="slider-labels">
+        <div class="slbl L">&#x26A0; Injected &mdash; No Root</div>
+        <div class="slbl R">&#x2713; Verified &mdash; viewonwebsite.com</div>
+      </div>
+    </div>
+
+    <!-- DUAL TELEMETRY -->
+    <div class="dual-tel">
+      <div class="dt-side">
+        <div class="dt-hd">
+          <div class="dt-dot" style="background:var(--threat)"></div>
+          <div class="dt-lb" style="color:var(--threat)">THREAT &mdash; UNVERIFIED</div>
+        </div>
+        <div class="tel-row">
+          <div class="tc"><div class="tlb">Injection Depth</div>
+            <div class="tv" id="ttd" style="color:var(--threat)">0%</div>
+            <div class="tbar" id="ttdb" style="width:0%;background:var(--threat)"></div></div>
+          <div class="tc"><div class="tlb">False Pixels</div>
+            <div class="tv" id="ttp" style="color:var(--threat)">0</div>
+            <div class="tbar" id="ttpb" style="width:0%;background:var(--threat)"></div></div>
+          <div class="tc"><div class="tlb">Status</div>
+            <div class="tv" id="tts" style="color:var(--threat)">STANDBY</div>
+            <div class="tbar" id="ttsb" style="width:0%;background:var(--threat)"></div></div>
+        </div>
+      </div>
+      <div class="dt-div"></div>
+      <div class="dt-side">
+        <div class="dt-hd">
+          <div class="dt-dot" id="vdot" style="background:var(--gray)"></div>
+          <div class="dt-lb" id="vlbl" style="color:var(--gray)">PENDING &mdash; viewonwebsite.com</div>
+        </div>
+        <div class="tel-row">
+          <div class="tc"><div class="tlb">Enclave Match</div>
+            <div class="tv" id="tvm" style="color:var(--gray)">---</div>
+            <div class="tbar" id="tvmb" style="width:0%;background:var(--green)"></div></div>
+          <div class="tc"><div class="tlb">LoT Time</div>
+            <div class="tv" id="tvt" style="color:var(--cyan)">0.000ms</div>
+            <div class="tbar" id="tvtb" style="width:0%;background:#c8a84b"></div></div>
+          <div class="tc"><div class="tlb">Verification</div>
+            <div class="tv" id="tvs" style="color:var(--gray)">PENDING</div>
+            <div class="tbar" id="tvsb" style="width:0%;background:var(--cyan)"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENT LOG -->
+    <div class="elog">
+      <div class="elog-hd"><div class="ndot"></div><div class="elog-t">Verification Event Log</div></div>
+      <div id="ell"></div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="dctrl">
+      <div class="ssel">
+        <button class="sbtn on" onclick="selSpd(0,this)">Road 120km/h</button>
+        <button class="sbtn" onclick="selSpd(1,this)">Aircraft 900km/h</button>
+        <button class="sbtn" onclick="selSpd(2,this)">Spacecraft 28,000km/h</button>
+      </div>
+      <button class="btn tr" id="abtn" onclick="doAttack()">&#x26A1; Launch Injection Attack</button>
+      <button class="btn cy" id="vbtn" onclick="doVerify()" disabled>&#x2713; Verify with did:viewonwebsite</button>
+      <button class="btn gh" onclick="doReset()">&#x21BA; Reset</button>
+    </div>
+
+  </div>
+</section>
+
+<div class="divl"></div>
+
+<!-- PROOF -->
+<section class="sec" id="proof">
+  <div class="stag">Physical Proof</div>
+  <div class="sh">The <span>6.67 Meter</span> Visual Gap</div>
+  <div class="pgrid reveal">
+    <div class="pc th">
+      <div class="pclb">Without did:viewonwebsite</div>
+      <div class="pcn">6.67m</div>
+      <div class="pcu">Visual gap at 120 km/h</div>
+      <div class="pcd">Visual data takes <b>50&ndash;200ms</b> to render and process. At 120&nbsp;km/h the vehicle travels <b>6.67 meters</b> acting on data that may be injected. A false signal shows a clear road when a child is there. The machine sees a lie. <b>This is the Zero-Visibility Transaction Gap.</b></div>
+    </div>
+    <div class="pc sf">
+      <div class="pclb">With did:viewonwebsite</div>
+      <div class="pcn">2.67cm</div>
+      <div class="pcu">Safety margin preserved</div>
+      <div class="pcd">did:viewonwebsite links the rendering engine directly to the <b>Mojo Enclave cryptographic signature</b>. Visual data verified in <b>under 1 millisecond</b>. No injection survives the Enclave comparison. The 6.67 meter gap collapses to <b>zero additional risk</b>. Machine acts on sovereign reality only.</div>
+    </div>
+  </div>
+  <div class="lotd reveal" style="transition-delay:.15s">
+    <div class="stag" style="margin-bottom:22px">Latency of Trust &mdash; All Methods</div>
+    <div class="lotr"><div class="lotl">Facial Recognition</div><div class="lotbw"><div class="lotb th" style="width:82%"><div class="lotbi">300ms &ndash; 2000ms</div></div><div class="lott">Unusable for L5</div></div></div>
+    <div class="lotr"><div class="lotl">Biometric Scan</div><div class="lotbw"><div class="lotb th" style="width:55%"><div class="lotbi">100ms &ndash; 500ms</div></div><div class="lott">Unusable for L5</div></div></div>
+    <div class="lotr"><div class="lotl">Current Rendering</div><div class="lotbw"><div class="lotb th" style="width:65%"><div class="lotbi">50ms &ndash; 200ms</div></div><div class="lott">Visual Gap: 6.67m</div></div></div>
+    <div class="lotr"><div class="lotl">did:viewonwebsite</div><div class="lotbw"><div class="lotb sf" style="width:3%"><div class="lotbi">&lt;1ms</div></div><div class="lott" style="color:var(--green)">&#x2713; SOVEREIGN</div></div></div>
+  </div>
+</section>
+
+<div class="divl"></div>
+
+<!-- SCENARIO -->
+<section class="sec alt" id="scenario">
+  <div class="stag">Zero-Visibility Transaction Gap</div>
+  <div class="sh">Does the Machine<br>See the <span>Truth?</span></div>
+  <div class="tl">
+    <div class="tr reveal">
+      <div class="tll"><div class="ttg">Without did:viewonwebsite</div><div class="tnm">200ms</div><div class="tdc">No cryptographic verification. Attack window open. Data may be injected. Road appears clear. Machine cannot distinguish real from injected.</div></div>
+      <div class="tlm"><div class="tdot rd"></div><div class="tms">T+0ms</div></div>
+      <div class="tlr"><div class="ttg">did:viewonwebsite Activates</div><div class="tnm">T+0ms</div><div class="tdc">Rendering engine links directly to Mojo Enclave. Cryptographic signature comparison initiated with viewonwebsite.com root of trust.</div></div>
+    </div>
+    <div class="tr reveal">
+      <div class="tll"><div class="ttg">Injection Active</div><div class="tnm">Corrupted</div><div class="tdc">False data replaces sensor feed. Child hidden. Machine sees empty road. Acts on the lie. Travels forward every millisecond.</div></div>
+      <div class="tlm"><div class="tdot lit"></div><div class="tms">T+0.5ms</div></div>
+      <div class="tlr"><div class="ttg">Enclave Comparison</div><div class="tnm">Running</div><div class="tdc">viewonwebsite.com compares rendering engine output against Enclave-signed ground truth. Every pixel verified against signed reality.</div></div>
+    </div>
+    <div class="tr reveal">
+      <div class="tll"><div class="ttg">Visual Gap</div><div class="tnm">6.67m</div><div class="tdc">6.67 meters traveled on injected data. Machine has acted on a lie the entire time. Child is 6.67 meters closer to impact.</div></div>
+      <div class="tlm"><div class="tdot lit"></div><div class="tms">T+1.0ms</div></div>
+      <div class="tlr"><div class="ttg">Reality Confirmed</div><div class="tnm">&#x2713; Real</div><div class="tdc">Enclave signature matches. Visual data uninjected. The child is there. The road is blocked. Machine acts on sovereign reality only.</div></div>
+    </div>
+    <div class="tr reveal">
+      <div class="tll"><div class="ttg">Outcome</div><div class="tnm" style="font-size:clamp(12px,1.8vw,20px)">Child Hit</div><div class="tdc">200ms on false visual data. 6.67m traveled seeing a lie. No defense without the root. Fatal. Uninsurable. Preventable.</div></div>
+      <div class="tlm"><div class="tdot eg"></div><div class="tms">RESULT</div></div>
+      <div class="tlr"><div class="ttg">Outcome</div><div class="tnm">Child Safe</div><div class="tdc">Visual reality confirmed in under 1ms. Zero injection depth. Emergency stop. 2.67cm margin preserved. Sovereign sight. From Dubai.</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divl"></div>
+
+<!-- MATRIX -->
+<section class="sec" style="padding:78px 60px">
+  <div class="stag" style="justify-content:center">Visual Gap Matrix</div>
+  <div class="sh c">Every Machine. <span>Every Speed.</span></div>
+  <table class="mtbl reveal">
+    <thead>
+      <tr><th>System</th><th>Speed</th><th>Injection Window</th><th>Visual Gap</th><th>Consequence</th><th>LoT With Root</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>&#x1F697; Autonomous Vehicle</td><td class="cv">120 km/h</td><td class="rv">200ms</td><td class="rv">6.67 m</td><td class="rv">Fatal</td><td class="gv">&lt;1ms</td></tr>
+      <tr><td>&#x2708;&#xFE0F; Autonomous Aircraft</td><td class="cv">900 km/h</td><td class="rv">200ms</td><td class="rv">50.00 m</td><td class="rv">Critical</td><td class="gv">&lt;1ms</td></tr>
+      <tr><td>&#x1F3E5; Surgical Robot</td><td class="cv">mm/s</td><td class="rv">200ms</td><td class="rv">0.3 mm inside body</td><td class="rv">Fatal</td><td class="gv">&lt;1ms</td></tr>
+      <tr><td>&#x1F680; Spacecraft (Orbital)</td><td class="cv">28,000 km/h</td><td class="rv">200ms</td><td class="rv">1,555 m</td><td class="rv">Mission Loss</td><td class="gv">&lt;1ms</td></tr>
+    </tbody>
+  </table>
+  <p style="text-align:center;margin-top:22px;font-family:'Syne Mono',monospace;font-size:9px;letter-spacing:.16em;color:var(--gray);text-transform:uppercase">The injection window is always 200ms without did:viewonwebsite. The solution closes it to zero at every velocity.</p>
+</section>
+
+<div class="divl"></div>
+
+<!-- STACK -->
+<section class="sec alt" id="stack">
+  <div class="stag">Sovereign Architecture</div>
+  <div class="sh">Where did:viewonwebsite<br><span>Lives in the Stack</span></div>
+  <div class="lyrs">
+    <div class="lyr mst reveal">
+      <div class="lnr">L5</div>
+      <div class="li"><div class="lnm">did:level5 &mdash; Master Certification</div><div class="lsb">Both roots verified simultaneously &middot; Complete Level 5 sovereignty<br>did:verifiedcar + did:viewonwebsite = did:level5 &middot; Total fatal risk: ZERO</div></div>
+      <div class="lpf"><div class="lmt">ZERO</div><div class="lun">Total Risk</div></div>
+    </div>
+    <div class="lyr mst reveal" style="transition-delay:.08s">
+      <div class="lnr">V2</div>
+      <div class="li"><div class="lnm">did:viewonwebsite &mdash; Visual Integrity Root</div><div class="lsb">&ldquo;Is what I see real?&rdquo; &middot; viewonwebsite.com sovereign root<br>Latency of Trust &lt;1ms &middot; 6.67m visual gap permanently closed<br>Rendering engine &harr; Mojo Enclave cryptographic comparison</div></div>
+      <div class="lpf"><div class="lmt">&lt;1ms</div><div class="lun">Latency of Trust</div></div>
+    </div>
+    <div class="lyr reveal" style="transition-delay:.16s">
+      <div class="lnr">V1</div>
+      <div class="li"><div class="lnm">did:verifiedcar &mdash; Identity Root</div><div class="lsb">&ldquo;Am I authorized to act?&rdquo; &middot; verifiedcar.com sovereign root<br>W3C DID Method &middot; ICANN 10-year lock &middot; 3.33m identity gap closed</div></div>
+      <div class="lpf"><div class="lmt">&lt;800&micro;s</div><div class="lun">Handshake</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divl"></div>
+
+<!-- INDUSTRIES -->
+<section class="sec">
+  <div class="stag">Universal Coverage</div>
+  <div class="sh">Every Machine That Sees<br><span>Must Verify</span></div>
+  <div class="igr">
+    <div class="icd reveal"><span class="iico">&#x1F697;</span><div class="inm">autonomous vehicle</div><div class="irw"><span class="ilb">Injection Window</span><span class="ivl r">200ms</span></div><div class="irw"><span class="ilb">Visual Gap</span><span class="ivl r">6.67m fatal</span></div><div class="irw"><span class="ilb">With did:viewonwebsite</span><span class="ivl g">Zero injection</span></div><div class="idc">Every sensor feed, camera frame, LIDAR return verified against Enclave ground truth before the vehicle acts on what it sees.</div></div>
+    <div class="icd reveal" style="transition-delay:.05s"><span class="iico">&#x2708;&#xFE0F;</span><div class="inm">autonomous aircraft</div><div class="irw"><span class="ilb">Injection Window</span><span class="ivl r">200ms</span></div><div class="irw"><span class="ilb">Visual Gap</span><span class="ivl r">50m at 900km/h</span></div><div class="irw"><span class="ilb">With did:viewonwebsite</span><span class="ivl g">Zero injection</span></div><div class="idc">Airspace data, terrain mapping, collision avoidance &mdash; all visual feeds require cryptographic verification before autonomous decisions.</div></div>
+    <div class="icd reveal" style="transition-delay:.1s"><span class="iico">&#x1F680;</span><div class="inm">spacecraft</div><div class="irw"><span class="ilb">Injection Window</span><span class="ivl r">200ms</span></div><div class="irw"><span class="ilb">Visual Gap</span><span class="ivl r">1,555m orbital</span></div><div class="irw"><span class="ilb">With did:viewonwebsite</span><span class="ivl g">Sovereign sight</span></div><div class="idc">Re-entry corridor data. Docking sensor feeds. Orbital navigation. False visual data in space is instant mission loss.</div></div>
+    <div class="icd reveal" style="transition-delay:.15s"><span class="iico">&#x1F3E5;</span><div class="inm">surgical robot</div><div class="irw"><span class="ilb">Injection Window</span><span class="ivl r">200ms</span></div><div class="irw"><span class="ilb">Visual Gap</span><span class="ivl r">0.3mm inside body</span></div><div class="irw"><span class="ilb">With did:viewonwebsite</span><span class="ivl g">Verified anatomy</span></div><div class="idc">Surgical imaging verified against Enclave-signed baseline. An injected false scan showing clear tissue when a vessel is there is fatal.</div></div>
+    <div class="icd reveal" style="transition-delay:.2s"><span class="iico">&#x1F3D9;&#xFE0F;</span><div class="inm">smart city</div><div class="irw"><span class="ilb">Injection Window</span><span class="ivl r">200ms</span></div><div class="irw"><span class="ilb">Visual Gap</span><span class="ivl r">City-scale attack</span></div><div class="irw"><span class="ilb">With did:viewonwebsite</span><span class="ivl g">Sovereign grid</span></div><div class="idc">Traffic cameras, intersection sensors, pedestrian detection &mdash; all city visual infrastructure requires root-level certification.</div></div>
+    <div class="icd reveal" style="transition-delay:.25s"><span class="iico">&#x1F4C8;</span><div class="inm">autonomous trading</div><div class="irw"><span class="ilb">Injection Window</span><span class="ivl r">200ms</span></div><div class="irw"><span class="ilb">Visual Gap</span><span class="ivl r">Trillion $ exposure</span></div><div class="irw"><span class="ilb">With did:viewonwebsite</span><span class="ivl g">Verified data</span></div><div class="idc">Market data visualization feeds are visual data. Injection attacks on autonomous trading systems create unquantifiable losses.</div></div>
+  </div>
+</section>
+
+<div class="divl"></div>
+
+<!-- VALUATION -->
+<section class="vsec" id="val">
+  <div class="vgb"></div>
+  <div class="vlb">Sovereign Valuation &middot; Visual Integrity Root &middot; 2026</div>
+  <div class="vbig" id="vn">$5</div>
+  <div class="vden" id="vd">QUADRILLION</div>
+  <div class="veq">
+    (75 Billion Autonomous Machines with Vision Systems by 2030)<br>
+    &times; (Every Visual Decision per Machine per Day)<br>
+    &times; (Visual Integrity Certification Fee per Verification)<br>
+    = <b>$5,000,000,000,000,000 &mdash; visual integrity layer alone</b><br><br>
+    Combined with did:verifiedcar &rarr; <b>$10 Quadrillion Total Sovereign Value</b><br>
+    One Root. Every Seeing Machine. One Architect.
+  </div>
+  <div class="vliv">
+    <div class="ndot"></div>
+    <span style="font-family:'Syne Mono',monospace;font-size:11px;letter-spacing:.1em">Visual Verifications Today:</span>
+    <span id="vc" style="font-size:17px">0</span>
+  </div>
+  <div style="display:flex;gap:12px;justify-content:center;position:relative;z-index:1;flex-wrap:wrap">
+    <a href="mailto:authority@hardcodedlogic.com" class="btn cy">Request Certification</a>
+    <a href="spec/" class="btn gh">View Specification</a>
+  </div>
+</section>
+
+<div class="divl"></div>
+
+<footer>
+  <div><div class="ftbr">did:viewonwebsite</div><div class="ftsu">Visual Integrity Root &middot; Dubai, UAE &middot; 2026</div></div>
+  <div class="ftr">
+    <div class="froot">viewonwebsite.com &mdash; Sovereign Visual Root</div>
+    <div class="froot">verifiedcar.com &mdash; Sovereign Identity Root</div>
+    <div class="froot">hardcodedlogic.com &mdash; Sovereign Authority</div>
+    <div class="froot">W3C DID Working Group &mdash; Registration Pending</div>
+  </div>
+  <div class="fau"><div class="faul">Sovereign Architect</div><div class="faue">authority@hardcodedlogic.com</div></div>
+</footer>
+<div class="fbt">
+  <div class="fbc">&copy; 2026 Tamer Maher Eldebes &middot; Hardcoded Logic &middot; All Rights Reserved</div>
+  <div class="fbs">is what you see real?</div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+// ── STARFIELD ──
+var bgc=document.getElementById('bgc'),bgx=bgc.getContext('2d');
+var BW=0,BH=0,stars=[];
+function rsz(){BW=bgc.width=window.innerWidth;BH=bgc.height=window.innerHeight}
+rsz();window.addEventListener('resize',rsz);
+for(var i=0;i<260;i++)stars.push({x:Math.random()*4000,y:Math.random()*3000,sz:Math.random()>.92?1.8:Math.random()>.7?1:.5,op:Math.random()*.4+.06,ph:Math.random()*Math.PI*2,sp:Math.random()*.003+.001});
+var bt=0;
+function animBG(){
+  bgx.clearRect(0,0,BW,BH);bt+=.006;
+  for(var i=0;i<stars.length;i++){
+    var s=stars[i],o=s.op+Math.sin(bt*s.sp*100+s.ph)*s.op*.5;
+    bgx.beginPath();bgx.arc(s.x%BW,s.y%BH,s.sz,0,Math.PI*2);
+    bgx.fillStyle='rgba(0,229,255,'+Math.max(0,Math.min(1,o))+')';bgx.fill();
+  }
+  requestAnimationFrame(animBG);
+}
+animBG();
+
+// ── COUNTER ──
+var tot=Math.floor(Math.random()*80000)+160000;
+function fn(n){return n.toLocaleString()}
+setInterval(function(){tot+=Math.floor(Math.random()*12)+2;document.getElementById('vc').textContent=fn(tot)},600);
+
+// ── LIVE FEED ──
+var vids=['VIEW-DXB-0124','VIEW-AUH-0891','VIEW-SHJ-0342','VIEW-DXB-0567','VIEW-SP-0128'];
+var evts=['VISUAL_OK','ENCLAVE_MATCH','VIEW_CERT','INJECT_BLOCKED','SOVEREIGN_VIEW','LOT_OK'];
+var fbEl=document.getElementById('fb');
+function msr(){return(Math.random()*.7+.1).toFixed(3)+'ms'}
+function nt(){var d=new Date();return[d.getHours(),d.getMinutes(),d.getSeconds()].map(function(n){return('0'+n).slice(-2)}).join(':')}
+function addF(){
+  var ln=document.createElement('div');ln.className='fl';
+  ln.innerHTML='<span class="flt">'+nt()+'</span><span class="fli">'+vids[Math.floor(Math.random()*vids.length)]+'</span><span class="fle">'+evts[Math.floor(Math.random()*evts.length)]+'</span><span class="flm">'+msr()+'</span>';
+  fbEl.insertBefore(ln,fbEl.firstChild);
+  while(fbEl.children.length>7)fbEl.removeChild(fbEl.lastChild);
+}
+for(var i=0;i<5;i++)addF();
+setInterval(addF,1200);
+
+// ── DRAG SLIDER COMPARE DEMO ──
+var cm=document.getElementById('cmerge');
+var ctx=cm.getContext('2d');
+var ctT=document.createElement('canvas'); // offscreen: threat
+var cxT=ctT.getContext('2d');
+var ctV=document.createElement('canvas'); // offscreen: verified
+var cxV=ctV.getContext('2d');
+
+var sliderX=0.5;
+var dragging=false;
+var dstate='idle',injD=0,verP=0;
+var af1=null,af2=null,loopAF=null;
+var spd=0;
+var il1=false,il2=false,vl1=false,vl2=false;
+var spds=[{gap:'6.67m'},{gap:'50.0m'},{gap:'1,555m'}];
+
+// Resize all canvases
+function rdc(){
+  var W=cm.parentElement.offsetWidth;
+  cm.width=W;cm.height=280;
+  ctT.width=W;ctT.height=280;
+  ctV.width=W;ctV.height=280;
+  renderComposite();
+}
+window.addEventListener('resize',function(){clearTimeout(window._rt);window._rt=setTimeout(rdc,80)});
+
+// Slider drag
+var ss=document.getElementById('sstage');
+function getSliderX(e){
+  var r=cm.getBoundingClientRect();
+  var cx2=(e.touches?e.touches[0].clientX:e.clientX);
+  return Math.max(0.02,Math.min(0.98,(cx2-r.left)/r.width));
+}
+function onDown(e){dragging=true;sliderX=getSliderX(e);updateHandle();renderComposite()}
+function onMove(e){if(!dragging)return;sliderX=getSliderX(e);updateHandle();renderComposite()}
+function onUp(){dragging=false}
+cm.addEventListener('mousedown',onDown);
+document.addEventListener('mousemove',onMove);
+document.addEventListener('mouseup',onUp);
+cm.addEventListener('touchstart',onDown,{passive:true});
+document.addEventListener('touchmove',onMove,{passive:true});
+document.addEventListener('touchend',onUp);
+
+function updateHandle(){
+  var pct=(sliderX*100).toFixed(2)+'%';
+  document.getElementById('sbar').style.left=pct;
+  document.getElementById('sknob').style.left=pct;
+}
+
+// Composite render: left=threat, right=verified, split at sliderX
+function renderComposite(){
+  var W=cm.width,H=cm.height;
+  if(!W)return;
+  var sp=Math.floor(sliderX*W);
+  ctx.clearRect(0,0,W,H);
+  // Left: threat canvas
+  ctx.save();ctx.beginPath();ctx.rect(0,0,sp,H);ctx.clip();ctx.drawImage(ctT,0,0);ctx.restore();
+  // Right: verified canvas
+  ctx.save();ctx.beginPath();ctx.rect(sp,0,W-sp,H);ctx.clip();ctx.drawImage(ctV,0,0);ctx.restore();
+  // Divider glow
+  ctx.strokeStyle='rgba(0,229,255,.15)';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(sp,0);ctx.lineTo(sp,H);ctx.stroke();
+  ctx.strokeStyle='rgba(0,229,255,.9)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(sp,0);ctx.lineTo(sp,H);ctx.stroke();
+}
+
+// Render loop during animation
+function startLoop(){
+  if(loopAF)return;
+  function loop(){renderComposite();loopAF=requestAnimationFrame(loop)}
+  loopAF=requestAnimationFrame(loop);
+}
+function stopLoop(){if(loopAF){cancelAnimationFrame(loopAF);loopAF=null}}
+
+// Draw road background
+function drawRoad(cx,W,H){
+  cx.clearRect(0,0,W,H);
+  cx.fillStyle='rgba(0,18,38,.93)';cx.fillRect(0,0,W,H);
+  // Road surface
+  cx.fillStyle='rgba(5,18,44,.9)';cx.fillRect(0,H*.38,W,H*.47);
+  // Road lines
+  cx.setLineDash([22,14]);cx.strokeStyle='rgba(0,229,255,.07)';cx.lineWidth=1;
+  cx.beginPath();cx.moveTo(0,H*.62);cx.lineTo(W,H*.62);cx.stroke();cx.setLineDash([]);
+  cx.strokeStyle='rgba(0,229,255,.05)';
+  cx.beginPath();cx.moveTo(0,H*.38);cx.lineTo(W,H*.38);cx.stroke();
+  cx.beginPath();cx.moveTo(0,H*.85);cx.lineTo(W,H*.85);cx.stroke();
+  // Distance markers
+  for(var xi=1;xi<5;xi++){
+    var xp=xi*(W/5);
+    cx.strokeStyle='rgba(0,229,255,.04)';cx.lineWidth=1;
+    cx.beginPath();cx.moveTo(xp,H*.38);cx.lineTo(xp,H*.85);cx.stroke();
+  }
+}
+
+// Draw idle state (both sides same)
+function drawIdleT(W,H){
+  drawRoad(cxT,W,H);
+  cxT.font='24px serif';cxT.textAlign='center';cxT.textBaseline='middle';
+  cxT.fillText('\uD83D\uDE97',65,H*.6);cxT.fillText('\uD83D\uDC66',W-65,H*.6);
+  cxT.font='9px "Syne Mono"';cxT.fillStyle='rgba(255,100,0,.3)';cxT.textAlign='center';
+  cxT.fillText('UNVERIFIED VISUAL FEED \u2014 NO ROOT ACTIVE',W/2,H*.2);
+}
+function drawIdleV(W,H){
+  drawRoad(cxV,W,H);
+  cxV.font='24px serif';cxV.textAlign='center';cxV.textBaseline='middle';
+  cxV.fillText('\uD83D\uDE97',65,H*.6);cxV.fillText('\uD83D\uDC66',W-65,H*.6);
+  cxV.font='9px "Syne Mono"';cxV.fillStyle='rgba(0,229,255,.28)';cxV.textAlign='center';
+  cxV.fillText('VIEWONWEBSITE.COM ROOT \u2014 AWAITING VERIFICATION',W/2,H*.2);
+}
+
+// Draw threat (injected) canvas
+function drawThreat(W,H,d){
+  drawRoad(cxT,W,H);
+  // Glitch artifacts
+  var n=Math.floor(d*18)+2;
+  for(var i=0;i<n;i++){
+    cxT.fillStyle='rgba(255,'+Math.floor(Math.random()*60)+',0,'+( Math.random()*.4+.06)+')';
+    cxT.fillRect(Math.random()*W,Math.random()*H,Math.random()*W*.75+10,Math.random()*6+1);
+  }
+  // Horizontal corruption lines
+  for(var i=0;i<Math.floor(d*5);i++){
+    cxT.fillStyle='rgba(255,61,0,'+Math.random()*.1+')';
+    cxT.fillRect(0,Math.random()*H,W,Math.random()*3+1);
+  }
+  // Car
+  cxT.font='24px serif';cxT.textAlign='center';cxT.textBaseline='middle';
+  cxT.shadowColor='rgba(255,61,0,.6)';cxT.shadowBlur=10;
+  cxT.fillText('\uD83D\uDE97',65,H*.6);cxT.shadowBlur=0;
+  // Child (hidden by injection)
+  if(d>0.3){
+    cxT.fillStyle='rgba(5,18,44,'+Math.min(.97,d*.9)+')';
+    cxT.fillRect(W-130,H*.38,130,H*.47);
+    cxT.globalAlpha=Math.max(0,1-d*1.4);
+    cxT.fillText('\uD83D\uDC66',W-65,H*.6);
+    cxT.globalAlpha=1;
+    if(d>0.6){
+      cxT.font='bold 9px "Syne Mono"';
+      cxT.fillStyle='rgba(255,61,0,'+(d-.5)+')';
+      cxT.textAlign='center';
+      cxT.fillText('\u26A0 INJECTED: ROAD CLEAR \u2014 CHILD HIDDEN',W/2,H*.26);
+    }
+  } else {
+    cxT.fillText('\uD83D\uDC66',W-65,H*.6);
+  }
+  // Threat overlay
+  cxT.fillStyle='rgba(255,61,0,'+d*.07+')';cxT.fillRect(0,0,W,H);
+  cxT.strokeStyle='rgba(255,61,0,'+d*.4+')';cxT.lineWidth=2;cxT.strokeRect(1,1,W-2,H-2);
+  // Status
+  cxT.font='9px "Syne Mono"';cxT.fillStyle='rgba(255,61,0,'+(.38+d*.62)+')';cxT.textAlign='center';
+  cxT.fillText('INJECTION '+(d*100).toFixed(0)+'% \u2014 '+spds[spd].gap+' EXPOSED ON FALSE DATA',W/2,H*.12);
+}
+
+// Draw verified canvas
+function drawVerified(W,H,p){
+  drawRoad(cxV,W,H);
+  if(p<1){
+    var scanX=p*W;
+    var g=cxV.createLinearGradient(scanX-50,0,scanX+25,0);
+    g.addColorStop(0,'transparent');g.addColorStop(.5,'rgba(0,229,255,.32)');g.addColorStop(1,'transparent');
+    cxV.fillStyle=g;cxV.fillRect(0,0,W,H);
+    cxV.fillStyle='rgba(0,255,136,.04)';cxV.fillRect(0,0,scanX,H);
+  } else {
+    cxV.fillStyle='rgba(0,255,136,.035)';cxV.fillRect(0,0,W,H);
+    cxV.strokeStyle='rgba(0,255,136,.055)';cxV.lineWidth=1;
+    for(var x=0;x<W;x+=28){cxV.beginPath();cxV.moveTo(x,0);cxV.lineTo(x,H);cxV.stroke()}
+    for(var y=0;y<H;y+=28){cxV.beginPath();cxV.moveTo(0,y);cxV.lineTo(W,y);cxV.stroke()}
+  }
+  cxV.font='24px serif';cxV.textAlign='center';cxV.textBaseline='middle';
+  if(p>0.5){cxV.shadowColor='rgba(0,229,255,.7)';cxV.shadowBlur=12}
+  cxV.fillText('\uD83D\uDE97',65,H*.6);cxV.shadowBlur=0;
+  if(p>0.3){cxV.shadowColor='rgba(0,255,136,.55)';cxV.shadowBlur=10}
+  cxV.fillText('\uD83D\uDC66',W-65,H*.6);cxV.shadowBlur=0;
+  // Verification rings
+  if(p>0.65){
+    var a=Math.min(1,(p-.65)*2.8);
+    cxV.beginPath();cxV.arc(W-65,H*.6,32,0,Math.PI*2);
+    cxV.strokeStyle='rgba(0,255,136,'+a*.45+')';cxV.lineWidth=1.5;cxV.stroke();
+    cxV.beginPath();cxV.arc(W-65,H*.6,44,0,Math.PI*2);
+    cxV.strokeStyle='rgba(0,255,136,'+a*.18+')';cxV.lineWidth=1;cxV.stroke();
+  }
+  cxV.font='9px "Syne Mono"';cxV.textAlign='center';
+  if(p>=1){
+    cxV.fillStyle='rgba(0,255,136,.8)';
+    cxV.fillText('\u2713 REALITY CONFIRMED \u2014 ENCLAVE MATCH \u2014 CHILD PRESENT',W/2,H*.12);
+    cxV.strokeStyle='rgba(0,255,136,.3)';cxV.lineWidth=2;cxV.strokeRect(1,1,W-2,H-2);
+  } else {
+    cxV.fillStyle='rgba(0,229,255,.58)';
+    cxV.fillText('VERIFYING \u2014 ENCLAVE COMPARISON '+(p*100).toFixed(0)+'%',W/2,H*.12);
+  }
+}
+
+// Add event log entry
+function addLog(ms,evt,res,col){
+  var ll=document.getElementById('ell');
+  var ln=document.createElement('div');ln.className='el';
+  ln.innerHTML='<span class="el-t">'+ms+'</span><span class="el-e">'+evt+'</span><span class="el-r" style="color:'+col+'">'+res+'</span>';
+  ll.appendChild(ln);ll.scrollTop=ll.scrollHeight;
+}
+
+// Speed selector
+window.selSpd=function(i,el){
+  spd=i;
+  document.querySelectorAll('.sbtn').forEach(function(b){b.classList.remove('on')});
+  el.classList.add('on');doReset();
+};
+
+// ATTACK
+window.doAttack=function(){
+  if(dstate==='attacked'||dstate==='verifying')return;
+  dstate='attacked';injD=0;il1=false;il2=false;
+  document.getElementById('ell').innerHTML='';
+  document.getElementById('abtn').disabled=true;
+  document.getElementById('vbtn').disabled=true;
+  document.getElementById('tts').textContent='ATTACKED';
+  document.getElementById('ttsb').style.width='100%';
+  startLoop();
+  var s0=performance.now();
+  function step(now){
+    injD=Math.min(1,(now-s0)/2400);
+    var W=ctT.width,H=ctT.height;
+    drawThreat(W,H,injD);
+    var dep=(injD*100).toFixed(0);
+    var fpx=Math.floor(injD*14000+Math.random()*200);
+    document.getElementById('ttd').textContent=dep+'%';
+    document.getElementById('ttdb').style.width=dep+'%';
+    document.getElementById('ttp').textContent=fn(fpx);
+    document.getElementById('ttpb').style.width=Math.min(100,injD*100)+'%';
+    if(injD>.08&&!il1){il1=true;addLog('0.0ms','Visual injection initiated \u2014 rendering engine targeted','ACTIVE','var(--threat)')}
+    if(injD>.62&&!il2){il2=true;addLog((injD*200).toFixed(0)+'ms','False data: child hidden \u2014 '+spds[spd].gap+' exposed','UNVERIFIED','var(--threat)')}
+    if(injD<1){af1=requestAnimationFrame(step)}
+    else{
+      addLog('200ms','Injection complete \u2014 machine acting on false visual data','FATAL RISK','var(--threat)');
+      dstate='attacked';
+      document.getElementById('vbtn').disabled=false;
+    }
+  }
+  af1=requestAnimationFrame(step);
+};
+
+// VERIFY
+window.doVerify=function(){
+  if(dstate!=='attacked')return;
+  dstate='verifying';verP=0;vl1=false;vl2=false;
+  document.getElementById('vbtn').disabled=true;
+  document.getElementById('vdot').style.background='var(--cyan)';
+  document.getElementById('vlbl').style.color='var(--cyan)';
+  document.getElementById('vlbl').textContent='VERIFYING \u2014 viewonwebsite.com \u2014 ENCLAVE COMPARISON';
+  addLog('0.0ms','did:viewonwebsite \u2192 viewonwebsite.com root of trust','SENT','var(--cyan)');
+  var s0=performance.now();
+  function step(now){
+    verP=Math.min(1,(now-s0)/1300);
+    var W=ctV.width,H=ctV.height;
+    drawVerified(W,H,verP);
+    var ms2=(verP*.95).toFixed(3)+'ms';
+    var mp=(verP*100).toFixed(0);
+    document.getElementById('tvt').textContent=ms2;
+    document.getElementById('tvtb').style.width=Math.min(100,verP*100)+'%';
+    document.getElementById('tvm').textContent=mp+'%';
+    document.getElementById('tvmb').style.width=mp+'%';
+    if(verP>.42&&!vl1){vl1=true;addLog('0.450ms','Enclave pixel comparison \u2014 injection detected and blocked','BLOCKING','var(--cyan)')}
+    if(verP>.84&&!vl2){vl2=true;addLog('0.840ms','Enclave match 100% \u2014 injection nullified \u2014 child confirmed','SOVEREIGN','var(--green)')}
+    if(verP<1){af2=requestAnimationFrame(step)}
+    else{
+      dstate='verified';stopLoop();renderComposite();
+      document.getElementById('tvs').textContent='VERIFIED';
+      document.getElementById('tvs').style.color='var(--green)';
+      document.getElementById('tvsb').style.width='100%';
+      document.getElementById('tvsb').style.background='var(--green)';
+      document.getElementById('vdot').style.background='var(--green)';
+      document.getElementById('vdot').style.boxShadow='0 0 10px rgba(0,255,136,.6)';
+      document.getElementById('vlbl').textContent='\u2713 VERIFIED \u2014 CHILD PRESENT \u2014 ROAD BLOCKED \u2014 REALITY CONFIRMED';
+      document.getElementById('vlbl').style.color='var(--green)';
+      addLog('0.960ms','did:viewonwebsite COMPLETE \u2014 LoT < 1ms','CHILD SAFE','var(--green)');
+      document.getElementById('abtn').disabled=false;
+    }
+  }
+  af2=requestAnimationFrame(step);
+};
+
+// RESET
+window.doReset=function(){
+  if(af1)cancelAnimationFrame(af1);
+  if(af2)cancelAnimationFrame(af2);
+  stopLoop();
+  dstate='idle';injD=0;verP=0;il1=false;il2=false;vl1=false;vl2=false;
+  document.getElementById('ell').innerHTML='';
+  document.getElementById('abtn').disabled=false;
+  document.getElementById('vbtn').disabled=true;
+  document.getElementById('ttd').textContent='0%';document.getElementById('ttdb').style.width='0%';
+  document.getElementById('ttp').textContent='0';document.getElementById('ttpb').style.width='0%';
+  document.getElementById('tts').textContent='STANDBY';document.getElementById('ttsb').style.width='0%';
+  document.getElementById('tvs').textContent='PENDING';document.getElementById('tvs').style.color='var(--gray)';
+  document.getElementById('tvsb').style.width='0%';document.getElementById('tvsb').style.background='var(--cyan)';
+  document.getElementById('tvm').textContent='---';document.getElementById('tvmb').style.width='0%';
+  document.getElementById('tvt').textContent='0.000ms';document.getElementById('tvtb').style.width='0%';
+  document.getElementById('vdot').style.background='var(--gray)';document.getElementById('vdot').style.boxShadow='none';
+  document.getElementById('vlbl').textContent='PENDING \u2014 viewonwebsite.com';document.getElementById('vlbl').style.color='var(--gray)';
+  setTimeout(function(){
+    rdc();
+    var W=ctT.width,H=ctT.height;
+    drawIdleT(W,H);drawIdleV(W,H);renderComposite();
+  },60);
+};
+
+// ── VALUATION COUNTER ──
+var vDone=false;
+function animVal(){
+  if(vDone)return;vDone=true;
+  var el=document.getElementById('vn'),de=document.getElementById('vd');
+  var ds=['THOUSAND','MILLION','BILLION','TRILLION','QUADRILLION'];
+  var vs=['$1','$1','$1','$1','$5'];
+  var idx=0;
+  el.style.fontSize='clamp(38px,9vw,110px)';el.style.color='var(--gray)';el.style.webkitTextStroke='0px';
+  var iv=setInterval(function(){
+    if(idx>=ds.length){
+      clearInterval(iv);
+      el.style.fontSize='';el.style.color='transparent';el.style.webkitTextStroke='1px var(--cyan)';
+      return;
+    }
+    el.textContent=vs[idx];de.textContent=ds[idx];idx++;
+  },300);
+}
+
+// ── SCROLL REVEAL ──
+var revs=document.querySelectorAll('.reveal');
+var ro=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)e.target.classList.add('vis')});
+},{threshold:.1});
+revs.forEach(function(el){ro.observe(el)});
+var vo=new IntersectionObserver(function(entries){
+  entries.forEach(function(e){if(e.isIntersecting)animVal()});
+},{threshold:.3});
+vo.observe(document.getElementById('vn'));
+
+// ── INIT ──
+setTimeout(function(){
+  rdc();
+  var W=ctT.width,H=ctT.height;
+  drawIdleT(W,H);drawIdleV(W,H);
+  renderComposite();
+  updateHandle();
+},120);
+
+})();
+</script>
+</body>
+</html>

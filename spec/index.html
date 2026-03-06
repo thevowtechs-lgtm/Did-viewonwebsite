@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>did:viewonwebsite — Method Specification v1.0</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#020810;color:#e8f4f8;font-family:'Courier New',monospace;max-width:900px;margin:0 auto;padding:60px 40px;line-height:1.7}
+h1{color:#00e5ff;font-size:22px;margin-bottom:6px;letter-spacing:.08em;font-family:'Courier New',monospace}
+h2{color:#00e5ff;font-size:14px;margin:40px 0 12px;letter-spacing:.12em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid rgba(0,229,255,.15)}
+h3{color:#8fb0c0;font-size:12px;margin:20px 0 8px;letter-spacing:.1em;text-transform:uppercase}
+p{color:#8fb0c0;font-size:13px;margin-bottom:14px}
+pre{background:rgba(0,20,50,.6);border:1px solid rgba(0,229,255,.15);padding:20px;font-size:11px;color:#8fb0c0;margin-bottom:20px;overflow-x:auto;white-space:pre-wrap;line-height:1.6}
+code{color:#00e5ff;font-size:11px}
+.meta{font-size:10px;color:#3d5a6e;letter-spacing:.12em;text-transform:uppercase;margin-bottom:40px}
+.proof{border-left:3px solid #ff3d00;padding:14px 20px;background:rgba(255,61,0,.05);margin:20px 0;font-size:12px;color:#8fb0c0}
+.safe{border-left:3px solid #00ff88;padding:14px 20px;background:rgba(0,255,136,.04);margin:20px 0;font-size:12px;color:#8fb0c0}
+a{color:#00e5ff;text-decoration:none}
+</style>
+</head>
+<body>
+
+<h1>did:viewonwebsite DID Method Specification</h1>
+<div class="meta">VERSION 1.0.0 &nbsp;&middot;&nbsp; PUBLISHED 2026-02-28 &nbsp;&middot;&nbsp; SOVEREIGN ROOT: VIEWONWEBSITE.COM &nbsp;&middot;&nbsp; DUBAI, UAE</div>
+
+<h2>1. Abstract</h2>
+<p>The <code>did:viewonwebsite</code> DID method defines a sovereign, domain-anchored root of trust for visual data integrity verification. It answers the fundamental question every autonomous machine must ask before acting on visual data: <strong>&ldquo;Is what I see real?&rdquo;</strong></p>
+<p>The method closes the Zero-Visibility Transaction Gap &mdash; the 50&ndash;200ms window during which visual data is unverified, during which a machine may travel 6.67 meters on a false sensor feed at 120 km/h. The did:viewonwebsite method reduces the Latency of Trust (LoT) to under 1 millisecond through cryptographic Enclave comparison.</p>
+
+<h2>2. The Problem: Latency of Trust</h2>
+
+<div class="proof">
+<strong>Without did:viewonwebsite:</strong><br>
+Visual injection window: 50ms &ndash; 200ms<br>
+Distance traveled on false data @ 120 km/h: <strong>6.67 meters</strong><br>
+A child steps onto the road. The machine sees an empty road. It has been injected.<br>
+The machine hits the child. The road was not empty. The machine did not know.
+</div>
+
+<div class="safe">
+<strong>With did:viewonwebsite:</strong><br>
+Latency of Trust: &lt;1ms<br>
+Visual injection window: <strong>0ms</strong><br>
+Enclave comparison confirms visual data before machine acts.<br>
+Child is present. Road blocked. Machine stops. Safety margin: 2.67cm.
+</div>
+
+<h2>3. Method Syntax</h2>
+<pre>did:viewonwebsite:{domain}
+
+did:viewonwebsite:viewonwebsite.com          (sovereign root)
+did:viewonwebsite:device.viewonwebsite.com   (device sub-identifier)
+did:viewonwebsite:{uuid}                     (session visual verification)</pre>
+
+<h2>4. DID Document Format</h2>
+<pre>{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:viewonwebsite:{identifier}",
+  "verificationMethod": [{
+    "id": "did:viewonwebsite:{identifier}#key-1",
+    "type": "Ed25519VerificationKey2020",
+    "controller": "did:viewonwebsite:{identifier}",
+    "publicKeyMultibase": "{enclave-signed-public-key}"
+  }],
+  "service": [{
+    "id": "did:viewonwebsite:{identifier}#visual-resolver",
+    "type": "VisualIntegrityResolver",
+    "serviceEndpoint": "https://viewonwebsite.com/resolve"
+  }]
+}</pre>
+
+<h2>5. Resolution</h2>
+<h3>5.1 CRUD Operations</h3>
+<p><strong>Create:</strong> DID documents created by sovereign authority through viewonwebsite.com root. ICANN 10-year domain lock ensures immutability of root.</p>
+<p><strong>Read:</strong> Resolved via GET to <code>https://viewonwebsite.com/resolve?did={did}</code>. Response in <code>application/did+json</code>. Sub-millisecond resolution from Mojo Enclave local cache.</p>
+<p><strong>Update:</strong> Restricted to sovereign authority. Signed update transactions only.</p>
+<p><strong>Delete:</strong> Deactivation via signed revocation. Revoked identifiers permanently inoperable.</p>
+
+<h3>5.2 Resolution Algorithm</h3>
+<pre>1. Parse did:viewonwebsite:{identifier}
+2. Query viewonwebsite.com resolver endpoint
+3. Compare rendering engine output against Enclave-signed baseline
+4. Cryptographic signature verification (Ed25519)
+5. Return VisualIntegrityProof with LoT timestamp
+Total time: &lt;1ms (Mojo Enclave ROM_LUT_0x4A2F)</pre>
+
+<h2>6. Security Considerations</h2>
+<p><strong>Visual Injection Attack:</strong> An attacker replaces real sensor/camera feed data with fabricated data. Without did:viewonwebsite, the machine has no mechanism to distinguish real from injected data during the 50&ndash;200ms rendering window. The method closes this window entirely through Enclave cryptographic comparison.</p>
+<p><strong>Sovereign Root Security:</strong> The viewonwebsite.com domain is secured under ICANN 10-year lock, preventing domain hijacking, transfer, or expiry attacks that would compromise the root of trust.</p>
+<p><strong>Enclave Integrity:</strong> Cryptographic operations execute within the Mojo Enclave, providing hardware-level isolation from the rendering stack. No injection attack can alter the Enclave baseline signature.</p>
+
+<h2>7. Relationship to did:verifiedcar and did:level5</h2>
+<p><code>did:viewonwebsite</code> (V2) answers: <em>Is what I see real?</em><br>
+<code>did:verifiedcar</code> (V1) answers: <em>Am I authorized to act?</em><br>
+<code>did:level5</code> (L5) certifies: <em>Both questions answered simultaneously under 1ms.</em></p>
+<p>All three DID methods must be active for Level 5 autonomous certification. did:viewonwebsite without did:verifiedcar leaves 3.33m identity gap. did:verifiedcar without did:viewonwebsite leaves 6.67m visual gap. Only did:level5 certification confirms zero total risk.</p>
+
+<h2>8. Authority and Contact</h2>
+<pre>Sovereign Architect: Tamer Maher Eldebes
+Authority Entity:    Hardcoded Logic
+Sovereign Root:      viewonwebsite.com
+Authority Email:     authority@hardcodedlogic.com
+Jurisdiction:        Dubai, UAE
+W3C Submission:      Pending &mdash; DID Working Group
+Companion Root:      verifiedcar.com (did:verifiedcar)</pre>
+
+<p style="margin-top:40px;font-size:10px;color:#3d5a6e;letter-spacing:.1em;text-transform:uppercase">
+  &copy; 2026 Tamer Maher Eldebes &middot; Hardcoded Logic &middot; All Rights Reserved &middot;
+  <a href="/">viewonwebsite.com</a> &middot;
+  <a href="mailto:authority@hardcodedlogic.com">authority@hardcodedlogic.com</a>
+</p>
+
+</body>
+</html>
