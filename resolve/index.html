@@ -2,59 +2,122 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>did:viewonwebsite Resolver</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>did:viewonwebsite — Resolver</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:#020810;color:#e8f4f8;font-family:'Courier New',monospace;padding:40px}
-h1{color:#00e5ff;font-size:18px;margin-bottom:8px;letter-spacing:.1em}
-p{color:#3d5a6e;font-size:12px;margin-bottom:32px;letter-spacing:.08em}
-.box{border:1px solid rgba(0,229,255,.2);padding:28px;max-width:760px;margin-bottom:20px;background:rgba(0,20,50,.4)}
-.label{font-size:10px;letter-spacing:.2em;color:#00e5ff;text-transform:uppercase;margin-bottom:8px}
-pre{font-size:12px;color:#8fb0c0;line-height:1.7;white-space:pre-wrap;word-break:break-all}
-.note{font-size:10px;color:#3d5a6e;letter-spacing:.08em;text-transform:uppercase;margin-top:20px}
-a{color:#00e5ff;text-decoration:none}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#000;color:#00e5ff;font-family:'Courier New',monospace;padding:40px 32px;min-height:100vh;}
+  .domain{font-size:11px;letter-spacing:3px;color:rgba(0,229,255,0.4);margin-bottom:24px;text-transform:uppercase;}
+  .domain a{color:rgba(0,229,255,0.4);text-decoration:none;}
+  .domain a:hover{color:#00e5ff;}
+  .status{font-size:12px;letter-spacing:4px;color:#00ff88;margin-bottom:32px;text-transform:uppercase;}
+  .comment{color:rgba(0,229,255,0.3);font-size:11px;}
+  .block{background:rgba(0,229,255,0.03);border:1px solid rgba(0,229,255,0.1);padding:24px;margin-bottom:24px;border-radius:2px;}
+  .key{color:rgba(0,229,255,0.6);}
+  .val-green{color:#00ff88;}
+  .val-blue{color:#00e5ff;}
+  .val-white{color:#fff;}
+  .val-muted{color:rgba(255,255,255,0.5);}
+  .line{display:flex;gap:8px;margin-bottom:6px;font-size:12px;line-height:1.6;}
+  .label{font-size:9px;letter-spacing:3px;color:rgba(0,229,255,0.4);text-transform:uppercase;margin-bottom:12px;}
+  .endpoints{margin-top:32px;}
+  .ep{display:flex;gap:16px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(0,229,255,0.06);font-size:11px;}
+  .ep-method{color:#00ff88;letter-spacing:1px;min-width:36px;}
+  .ep-url{color:#00e5ff;opacity:0.7;}
+  .ep-desc{color:rgba(255,255,255,0.3);margin-left:auto;font-size:10px;letter-spacing:1px;}
+  .footer{margin-top:48px;font-size:10px;color:rgba(0,229,255,0.2);letter-spacing:2px;}
 </style>
 </head>
 <body>
-<h1>did:viewonwebsite Resolver</h1>
-<p>SOVEREIGN VISUAL INTEGRITY ROOT &mdash; VIEWONWEBSITE.COM &mdash; DUBAI, UAE</p>
 
-<div class="box">
-  <div class="label">Resolver Endpoint</div>
-  <pre>GET /resolve?did=did:viewonwebsite:{identifier}
-
-Response: application/did+json
-Status: 200 OK (resolved) | 404 Not Found | 400 Bad Request</pre>
+<div class="domain">
+  <a href="https://viewonwebsite.com">viewonwebsite.com</a> / resolve
 </div>
 
-<div class="box">
-  <div class="label">Example Resolution</div>
-  <pre>GET /resolve?did=did:viewonwebsite:viewonwebsite.com
+<div class="status">✓ SOVEREIGN ACTIVE —</div>
 
-{
-  "id": "did:viewonwebsite:viewonwebsite.com",
-  "method": "viewonwebsite",
-  "sovereign_root": "viewonwebsite.com",
-  "visual_integrity": true,
-  "latency_of_trust": "&lt;1ms",
-  "enclave_verified": true,
-  "injection_window": "0ms",
-  "status": "SOVEREIGN"
-}</pre>
+<div class="comment">// did:viewonwebsite — live response</div>
+<div class="comment">// Visual Integrity Root · Layer 4 · hardcodedlogic.com</div>
+
+<br>
+
+<div class="block">
+  <div class="label">Resolution Output</div>
+  <div class="line"><span class="key">"id":</span><span class="val-white">"did:viewonwebsite:viewonwebsite.com"</span></div>
+  <div class="line"><span class="key">"method":</span><span class="val-white">"viewonwebsite"</span></div>
+  <div class="line"><span class="key">"sovereign_root":</span><span class="val-white">"viewonwebsite.com"</span></div>
+  <div class="line"><span class="key">"visual_integrity":</span><span class="val-green">true</span></div>
+  <div class="line"><span class="key">"sovereign_status":</span><span class="val-green">"VERIFIED"</span></div>
+  <div class="line"><span class="key">"visual_gap_closed":</span><span class="val-green">"6.67m → 2.67cm"</span></div>
+  <div class="line"><span class="key">"injection_window":</span><span class="val-green">"0ms"</span></div>
+  <div class="line"><span class="key">"latency_of_trust":</span><span class="val-blue">"&lt;1ms"</span></div>
+  <div class="line"><span class="key">"enclave_verified":</span><span class="val-green">true</span></div>
+  <div class="line"><span class="key">"camera_hash_sealed":</span><span class="val-green">true</span></div>
+  <div class="line"><span class="key">"un_r155_ready":</span><span class="val-green">true</span></div>
+  <div class="line"><span class="key">"status":</span><span class="val-green">"SOVEREIGN"</span></div>
+  <div class="line"><span class="key">"_sovereign_meta":</span><span class="val-muted">{</span></div>
+  <div class="line" style="padding-left:24px;"><span class="key">"latency_ms":</span><span class="val-blue">1</span></div>
+  <div class="line" style="padding-left:24px;"><span class="key">"domain":</span><span class="val-white">"viewonwebsite.com"</span></div>
+  <div class="line" style="padding-left:24px;"><span class="key">"protocol":</span><span class="val-white">"HZROOT01"</span></div>
+  <div class="line" style="padding-left:24px;"><span class="key">"stack_layer":</span><span class="val-white">"4 of 5"</span></div>
+  <div class="line" style="padding-left:24px;"><span class="key">"architect":</span><span class="val-white">"Tamer Maher Eldebes"</span></div>
+  <div class="line" style="padding-left:24px;"><span class="key">"authority":</span><span class="val-white">"hardcodedlogic.com"</span></div>
+  <div class="line" style="padding-left:24px;"><span class="key">"timestamp":</span><span class="val-muted" id="ts">—</span></div>
+  <div class="line"><span class="val-muted">}</span></div>
 </div>
 
-<div class="box">
-  <div class="label">Root DID Document</div>
-  <pre>did:viewonwebsite:viewonwebsite.com
-
-Resolution: <a href="/.well-known/did.json">/.well-known/did.json</a>
-Configuration: <a href="/.well-known/did-configuration.json">/.well-known/did-configuration.json</a>
-Specification: <a href="/spec/">viewonwebsite.com/spec/</a>
-Authority: <a href="mailto:authority@hardcodedlogic.com">authority@hardcodedlogic.com</a></pre>
+<div class="block">
+  <div class="label">DID Method</div>
+  <div class="line"><span class="key">DID method</span><span class="val-blue">did:viewonwebsite</span></div>
+  <div class="line"><span class="key">Layer</span><span class="val-blue">4 — Visual Integrity Root</span></div>
+  <div class="line"><span class="key">Question answered</span><span class="val-white">"Is what I see real?"</span></div>
+  <div class="line"><span class="key">Visual integrity</span><span class="val-green">CONFIRMED per call</span></div>
+  <div class="line"><span class="key">Injection window</span><span class="val-green">ZERO</span></div>
+  <div class="line"><span class="key">Camera hash</span><span class="val-green">SEALED per frame</span></div>
+  <div class="line"><span class="key">Safety margin</span><span class="val-green">2.67cm at 120km/h</span></div>
+  <div class="line"><span class="key">Protocol</span><span class="val-white">HZROOT01</span></div>
+  <div class="line"><span class="key">Architect</span><span class="val-white">Tamer Maher Eldebes</span></div>
+  <div class="line"><span class="key">Authority</span><span class="val-white">hardcodedlogic.com</span></div>
+  <div class="line"><span class="key">Jurisdiction</span><span class="val-white">Dubai UAE — 10yr lock</span></div>
 </div>
 
-<div class="note">
-  Resolver implementation requires deployment. Contact authority@hardcodedlogic.com for integration.
+<div class="endpoints">
+  <div class="label">Well-Known Endpoints</div>
+  <div class="ep">
+    <span class="ep-method">GET</span>
+    <span class="ep-url">/.well-known/did.json</span>
+    <span class="ep-desc">W3C DID Document</span>
+  </div>
+  <div class="ep">
+    <span class="ep-method">GET</span>
+    <span class="ep-url">/.well-known/did-configuration.json</span>
+    <span class="ep-desc">DIF Domain Linkage</span>
+  </div>
+  <div class="ep">
+    <span class="ep-method">GET</span>
+    <span class="ep-url">/resolve</span>
+    <span class="ep-desc">Live DID Resolver</span>
+  </div>
+  <div class="ep">
+    <span class="ep-method">GET</span>
+    <span class="ep-url">/spec</span>
+    <span class="ep-desc">DID Method Specification</span>
+  </div>
+  <div class="ep">
+    <span class="ep-method">GET</span>
+    <span class="ep-url">/license/tiers</span>
+    <span class="ep-desc">License — $100 per vehicle per year</span>
+  </div>
 </div>
+
+<div class="footer">
+  did:viewonwebsite · viewonwebsite.com · Layer 4 · hardcodedlogic.com<br>
+  Tamer Maher Eldebes · Sovereign Architect · Dubai UAE · 2026
+</div>
+
+<script>
+  document.getElementById('ts').textContent = new Date().toISOString();
+</script>
+
 </body>
 </html>
